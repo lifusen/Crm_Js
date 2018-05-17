@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:oxm="http://www.springframework.org/schema/oxm" 
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:context="http://www.springframework.org/schema/context"
+     xsi:schemaLocation="
+	     http://www.springframework.org/schema/beans
+	     http://www.springframework.org/schema/beans/spring-beans.xsd
+	     http://www.springframework.org/schema/tx
+	     http://www.springframework.org/schema/tx/spring-tx.xsd
+	     http://www.springframework.org/schema/oxm 
+	     http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd 
+	     http://www.springframework.org/schema/aop
+	     http://www.springframework.org/schema/aop/spring-aop.xsd
+	     http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd">
+	<context:component-scan base-package="cn.itproject.crm" />
+	
+	<bean class="cn.itproject.crm.controller.init.ApplicationInitListener">
+		<property name="companyService" ref="companyServiceImpl"/>
+		<property name="configService" ref="configServiceImpl"/>
+		<property name="notificationService" ref="notificationServiceImpl"/>
+	</bean>
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	  <property name="locations">
+	  	<list>
+	  		<value>classpath:mysql.properties</value>
+	  		<value>classpath:druid.properties</value>
+	  		<value>classpath:hibernate.properties</value>
+	  		<value>classpath:redis.properties</value>
+	  	</list>
+	  </property>
+	</bean>
+	                 
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="druidDataSource" />
+		<property name="packagesToScan">
+			<list>
+				<value>cn.itproject.crm.bean</value>
+			</list>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>signCustomer.hbm.xml</value>
+				<value>customerReminderList.hbm.xml</value>
+				<value>customer.hbm.xml</value>
+				<value>rejectCustomer.hbm.xml</value>
+				<value>report.hbm.xml</value>
+				<value>allot.hbm.xml</value>
+				<value>newOrder.hbm.xml</value>
+				<value>signCustomerServeRating.hbm.xml</value>
+				<value>outLoanCustomer.hbm.xml</value>
+				<value>desktop.hbm.xml</value>
+				<value>plan.hbm.xml</value>
+				<value>desktop_dailyBasicData.hbm.xml</value>
+				<value>warrantOrder.hbm.xml</value>
+				<value>releaseCommonPool.xml</value>
+			</list>
+		</property>
+		
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="hibernate.use_sql_commants">${hibernate.use_sql_comments}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				
+				<prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+				<prop key="hibernate.cache.region.factory_class">${hibernate.cache.region.factory_class}</prop>
+				<prop key="hibernate.cache.provider_configuration_file_resource_path">${hibernate.cache.provider_configuration_file_resource_path}</prop>
+				<prop key="hibernate.cache.use_structured_entries">${hibernate.cache.use_structured_entries}</prop>
+		    </props>
+		</property>
+	</bean>
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true" />
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	 -->
+	<aop:config>
+		<aop:pointcut id="bizMethods" expression="execution(* cn.itproject.crm.service.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="bizMethods" />
+	</aop:config>
+	
+</beans>

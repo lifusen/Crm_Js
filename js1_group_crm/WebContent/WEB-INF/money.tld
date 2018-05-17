@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+    
+  <description>将金额转换为万为单位</description>
+  <display-name>moneyFormat</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>moneyFormat</short-name>
+  <uri>http://itproject.cn/moneyFormat</uri>
+
+  <function>
+    <description>金额格式化</description>
+    <name>moneyFormat</name>
+    <function-class>cn.itproject.crm.util.HandleMoneyFunction</function-class>
+    <function-signature>double moneyFormat(java.lang.Double)</function-signature>
+  </function>
+</taglib>

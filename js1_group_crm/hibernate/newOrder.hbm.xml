@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<sql-query name="getNewOrderList">
+		<![CDATA[
+			SELECT 
+				c.id,
+				d.name as dName,
+				e.name as eName,
+				c.name as cName,
+				c.phone,
+				c.customerAsset,
+				c.customerAssetTitile,
+				c.loanType,
+				cs.sourceName,
+				c.updateTime,
+				c.companyId
+			FROM Customer c
+			left join Department d
+				on c.departmentId=d.id
+			left join Employee e
+				on c.employeeId=e.id
+			left join CustomerSource cs 
+				on c.customerSourceId = cs.id
+			where c.state in (:states) 
+			#{where}
+		]]>
+	</sql-query>
+	
+	<sql-query name="getNewOrderCount">
+		<![CDATA[
+			SELECT 
+				count(id)
+			FROM Customer where
+			state in (:states) 
+			#{where}
+		]]>
+	</sql-query>
+</hibernate-mapping>

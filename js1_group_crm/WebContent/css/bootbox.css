@@ -1,0 +1,14 @@
+div.bootbox div.modal-header>a.close{
+	background-image: url("images/bg_white.png");
+}
+
+.showCode{
+	border:0px solid #ddd;
+	font-size: 24px;
+}
+.showCode pre{
+	line-height:20px;
+	font-size:18px;
+	background-color: #FFFFFF;
+	margin-top: 5px;
+}

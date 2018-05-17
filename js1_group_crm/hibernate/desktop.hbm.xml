@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 每日基础工作数据汇总 -->
+	<!-- 获取部门数据 -->
+	<!-- 已过时 -->
+	<sql-query name="getRemindTotalCountOfDept">
+		<![CDATA[
+			select 
+				d.id as rid,
+				count(cf.type) as count
+			from customerfollow cf
+			inner join employee e
+				on e.id=cf.employeeId
+			inner join department d
+				on e.departmentId=d.id
+			where cf.type is not null
+				and cf.remindTime is not null
+				and d.id in(select id from department where name like '%业务%') 
+				#{remindTime}
+			group by d.id 
+		]]>
+	</sql-query>	
+	
+	<!-- 已过时 -->
+	<!-- 获取员工数据 -->
+	<sql-query name="getRemindTotalCountOfEmp">
+		<![CDATA[
+			select 
+				e.id as rid,
+				count(cf.type) as count
+			from customerfollow cf
+			inner join employee e
+				on e.id=cf.employeeId
+			where cf.type is not null
+				and cf.remindTime is not null
+				and e.id in :employeeIds
+				#{remindTime}
+			group by e.id 
+		]]>
+	</sql-query>	
+	
+	<!-- 已过时 -->
+	<!-- 业务员桌面:获取员工今日提醒数据 -->
+	<sql-query name="getTodayRemindCountOfEmp">
+		<![CDATA[
+			select
+					e.id as rid,
+					count(1) as count
+			from
+					customer c     
+			inner join
+					(
+							select
+									max(id) as fId,
+									f.customerId as cId               
+							from
+									customerfollow f                       
+							where
+									f.type is not null                      
+							group by
+									f.customerId                
+					) temp                    
+							on c.id = temp.cId             
+			inner join
+					customerfollow cf                     
+							on cf.id = temp.fId             
+			inner join
+					employee e                     
+							on c.employeeId = e.id             
+			left join
+					department d                     
+							on c.departmentId = d.id             
+			where
+					cf.remindTime is not null      
+					and cf.type is not null
+					and cf.type #{symbol} 5
+					and c.state in (:states)  
+					and e.id = :employeeId  
+				  and DATEDIFF(cf.remindTime,NOW()) = 0
+		]]>
+	</sql-query>	
+
+	<!-- 上门签单进度汇总 -->
+	<!-- 获取部门当天/当月已上门/已签单总量 -->
+	<sql-query name="getVisitOrSignRemindTotalCountOfDept">
+		<![CDATA[
+			select 
+				d.id as rid,
+				count(cf.type) as count
+			from customerfollow cf
+			inner join employee e
+				on e.id=cf.employeeId
+			inner join department d
+				on e.departmentId=d.id
+			where cf.type = :type
+				and d.id in(
+					select id from department 
+					where type = '业务' and companyId = #{companyId}
+				) 
+				and #{edtDate}
+			group by d.id
+		]]>
+	</sql-query>	
+	
+	<!-- 获取员工当天/当月已上门/已签单总量 -->
+	<sql-query name="getVisitOrSignRemindTotalCountOfEmp">
+		<![CDATA[
+			select 
+				e.id as rid,
+				count(cf.type) as count
+			from customerfollow cf
+			inner join employee e
+				on e.id=cf.employeeId
+			where cf.type = :type
+				and e.id in :employeeIds
+				and #{edtDate}
+			group by e.id
+		]]>
+	</sql-query>	
+	
+	
+	
+	<!-- 收费数据汇总-部门统计 -->
+	<sql-query name="getTollDataPercentOfDept">
+		<![CDATA[
+			select 
+				d.id as rid,
+				d.`name` as rname,
+				s.loanType,
+					ROUND(
+						((sum(s.costOfContract)/sum(s.loanAmount))*100.0),2
+					) as percent
+			from signcustomer s
+			inner join customer c
+				on s.customerId = c.id
+			inner join department d
+				on c.departmentId=d.id
+			WHERE d.id in(
+				select id from department 
+				where type = '业务' and companyId = :companyId
+			) 
+				${totalOrMonth} 
+			GROUP BY d.id,s.loanType
+		]]>
+	</sql-query>	
+	
+	<!-- 收费数据汇总-员工统计 -->
+	<sql-query name="getTollDataPercentOfEmp">
+		<![CDATA[
+			select 
+				e.id as rid,
+				e.`name` as rname,
+				s.loanType,
+					ROUND(
+						((sum(s.costOfContract)/sum(s.loanAmount))*100.0),2
+					) as percent
+			from signcustomer s
+			inner join customer c
+				on s.customerId = c.id
+			inner join employee e
+				on c.employeeId = e.id
+			WHERE e.id in (:ids)
+				${totalOrMonth} 
+			GROUP BY e.id,s.loanType
+		]]>
+	</sql-query>	
+	
+	
+	
+	<!-- 收款数据汇总-部门统计 -->
+	<sql-query name="getGatheringDataPercentOfDept">
+		<![CDATA[
+			select 
+				d.id as rid,
+				d.`name` as rname,
+				sum(o.loanAmount) as loanAmountTotal, -- 放款总和
+				sum(o.netEarnings) as netEarningsTotal -- 净业绩总和
+			from outloancustomer o
+			inner join signcustomer s
+				on s.id = o.signCustomerId
+			inner join customer c
+				on s.customerId = c.id
+			inner join employee e
+				on c.employeeId = e.id
+			inner join department d
+				on e.departmentId = d.id
+			where d.id IN(
+				select id from department 
+				where type = '业务' and companyId = :companyId
+			) 
+				${totalOrMonth} 
+			group by d.id
+		]]>
+	</sql-query>	
+	
+	<!-- 收款数据汇总-员工统计 -->
+	<sql-query name="getGatheringDataPercentOfEmp">
+		<![CDATA[
+			select 
+				e.id as rid,
+				e.`name` as rname,
+				sum(o.loanAmount) as loanAmountTotal, -- 放款总和
+				sum(o.netEarnings) as netEarningsTotal -- 净业绩总和
+			from outloancustomer o
+			inner join signcustomer s
+				on s.id = o.signCustomerId
+			inner join customer c
+				on s.customerId = c.id
+			inner join employee e
+				on c.employeeId = e.id
+			where e.id in(:ids)
+				 ${totalOrMonth} 
+			group by e.id
+		]]>
+	</sql-query>	
+	
+</hibernate-mapping>

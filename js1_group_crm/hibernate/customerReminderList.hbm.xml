@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 根据员工ID获取客户工作提醒列表 -->
+	<sql-query name="getCustomerReminderListByEmployeeIds">
+		<![CDATA[
+			select
+				c.id as customerId,
+		        c.name as customerName,
+		        c.phone,
+		        c.loanType,
+		        c.callCount,
+		        c.visitCount,
+		        c.dataPercent,
+		        c.attentionLevel,
+		        c.visibility,
+		        c.signState,
+		        c.countdown,c.state,
+		        c.fllowDate,
+		        c.createTime,
+		        c.lastFollowId as customerFollowId,
+		        c.lastRemindContent as remindContent,
+		        c.lastFollowType as customerFollowType,
+		        c.lastRemindTime as remindTime,
+		        c.employeeId as employeeId,
+		        c.departmentId as departmentId,
+				c.companyId
+				from customer c
+			    where c.lastFollowType is not null
+			    	and c.lastRemindTime is not null
+			    	and c.employeeId is not null
+					and  c.state in (:states) #{where} #{whereKey} #{dateScope} #{followType}
+		]]>
+	</sql-query>
+	
+	<sql-query name="getWarrantReminderListByEmployeeIds">
+		<![CDATA[
+			select
+				c.id as customerId,
+		        c.name as customerName,
+		        c.phone,
+		        c.loanType,
+		        c.callCount,
+		        c.visitCount,
+		        c.dataPercent,
+		        c.attentionLevel,
+		        c.visibility,
+		        c.signState,
+		        c.countdown,
+		        c.fllowDate,
+		        c.createTime,
+		        c.lastWarrantFollowId as customerFollowId,
+		        c.lastWarrantRemindContent as remindContent,
+		        c.lastWarrantFollowType as customerFollowType,
+		        c.lastWarrantRemindTime as remindTime,
+		        c.employeeId as employeeId,
+		        c.departmentId as departmentId,
+				c.companyId,
+				s.warrantCompanyId,
+				s.warrantDepartmentId,
+				s.warrantEmployeeId  
+				from customer c inner join signcustomer s 
+				on c.id = s.customerId 
+			    where c.lastWarrantFollowType is not null
+			    	and c.lastWarrantRemindTime is not null
+			    	and s.warrantEmployeeId is not null
+					and  c.state in (:states) #{where} #{whereKey} #{dateScope} #{followType}
+		]]>
+	</sql-query>
+	
+	<!-- 根据员工ID获取客户工作提醒列表的数量 -->
+	<sql-query name="getCustomerReminderListCountByEmployeeIds">
+		<![CDATA[
+			select count(*) from(
+				select
+				c.id  
+				from customer c
+			    where c.lastFollowType is not null
+			    	and c.lastRemindTime is not null
+			    	and c.employeeId is not null
+					and  c.state in (:states) #{where} #{whereKey} #{dateScope} #{followType}
+			) temp
+		]]>
+	</sql-query>
+	
+	<sql-query name="getWarrantReminderListCountByEmployeeIds">
+		<![CDATA[
+			select count(*) from(
+				select
+				c.id  
+				from customer c inner join signcustomer s 
+				on c.id = s.customerId 
+			    where c.lastWarrantFollowType is not null
+			    	and c.lastWarrantRemindTime is not null
+			    	and s.warrantEmployeeId is not null
+					and  c.state in (:states) #{where} #{whereKey} #{dateScope} #{followType}
+			) temp
+		]]>
+	</sql-query>
+	
+</hibernate-mapping>

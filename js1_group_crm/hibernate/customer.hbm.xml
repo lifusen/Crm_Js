@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 面试人员列表 -->
+	<sql-query name="getValidPersonList">
+		<![CDATA[
+			select 
+				c.id,
+				c.name,
+				c.phone,
+				c.age,
+				c.createDate,
+				c.createTime,
+				c.gender,
+				c.jobs,
+				c.otherInfo,
+				c.year
+			FROM applyperson c
+            WHERE 
+			#{where}
+			 #{whereKey}
+		]]>
+	</sql-query>
+
+	<!-- 项目合同列表 -->
+	<sql-query name="getValidContractManagerList">
+		<![CDATA[
+			select 
+				*
+			FROM ContractManager c
+            WHERE 
+			#{where}
+			 #{whereKey}
+		]]>
+	</sql-query>
+	<!-- 有效客户列表 -->
+	<sql-query name="getValidCustomerList">
+		<![CDATA[
+			select 
+				c.id as customerId,
+				c.name as customerName,
+				c.phone,
+				c.loanType,
+				c.callCount,
+				c.visitCount,
+				c.dataPercent,
+				c.attentionLevel,
+				c.customerLevel,
+				c.visibility,
+				c.turnDetail,
+				c.fllowDate,
+				c.customerAssetTitile,
+				c.customerAsset,
+				c.createTime,
+				c.releaseDate,
+				e.id as employeeId,
+				e.name as employeeName,
+				d.id as departmentId,
+				d.name as departmentName,
+				c.state,
+				cs.sourceName,
+				c.companyId
+			FROM Customer c
+			left join Department d on c.departmentId=d.id 
+			left join Employee e on c.employeeId=e.id 
+			left join CustomerSource cs on c.customerSourceId = cs.id WHERE 
+			c.state in (:states) 
+			#{where}
+			 #{whereKey}
+		]]>
+	</sql-query>
+	<sql-query name="searchCustomerList">
+		<![CDATA[
+			select 
+				c.id as customerId,
+				c.name as customerName,
+				c.createDate,
+				c.phone,
+				c.loanType,
+				c.callCount,
+				c.visitCount,
+				c.dataPercent,
+				c.attentionLevel,
+				c.visibility,
+				c.turnDetail,
+				c.fllowDate,
+				c.embodiment,
+				c.enterpriseNature,
+				e.id as employeeId,
+				e.name as employeeName,
+				d.id as departmentId,
+				d.name as departmentName,
+				c.state,
+				cs.sourceName,
+				cs.id,
+				c.companyId
+			FROM Customer c
+			inner join Department d on c.departmentId=d.id 
+			inner join Employee e on c.employeeId=e.id 
+			left join CustomerSource cs on c.customerSourceId = cs.id WHERE 
+			c.state in (:states) 
+			 #{customerSourceId}
+			 #{where}
+		]]>
+	</sql-query>
+
+	<!-- 根据员工ID获取其签单客户列表的数量 -->
+	<sql-query name="getCustomerCountByState">
+		<![CDATA[
+			select count(c.id) from customer c
+			where c.state in (:states) #{where} #{whereKey}
+		]]>
+	</sql-query>
+
+	<sql-query name="searchCountByState">
+		<![CDATA[
+			select count(c.id) from customer c
+			left join CustomerSource cs 
+			on c.customerSourceId = cs.id 
+			where c.state in (:states) #{customerSourceId}
+		]]>
+	</sql-query>
+
+	<sql-query name="getIdsByteStateAndEId">
+		<![CDATA[
+			select c.id from customer c
+			where c.state in (:states) #{where} #{whereKey}
+		]]>
+	</sql-query>
+
+</hibernate-mapping>

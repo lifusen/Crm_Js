@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:context="http://www.springframework.org/schema/context"
+     xsi:schemaLocation="
+	     http://www.springframework.org/schema/beans
+	     http://www.springframework.org/schema/beans/spring-beans.xsd
+	     http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!-- 定时释放公共池 -->
+	<bean id="releaseJob" class="cn.itproject.crm.job.ReleaseJob" />
+    <!-- 定义调用对象和调用对象的方法 -->
+    <bean id="releaseTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject" ref="releaseJob" />
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod" value="releaseCommonPool" />
+    </bean>
+    <!-- 定义触发时间 -->
+    <bean id="doReleaseTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="releaseTask" />
+        <!-- cron表达式 -->
+        <property name="cronExpression" value="0 0 7/23 * * ?" />
+    </bean>
+	
+	
+	<!-- 定时备份数据库 -->
+	<bean id="backupMySQLJob" class="cn.itproject.crm.job.BackupMySQLJob"/>
+    <!-- 备份数据库的task -->
+    <bean id="backupMySQLTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!-- 调用的类 -->
+        <property name="targetObject" ref="backupMySQLJob" />
+        <!-- 调用类中的方法 -->
+        <property name="targetMethod" value="backup" />
+    </bean>
+    <!-- 定义触发时间 -->
+    <bean id="backupMySQLTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="backupMySQLTask" />
+        <!-- cron表达式 ,每天的13点和23点备份数据库-->
+        <property name="cronExpression" value="0 0 13/23 * * ?" />
+    </bean>
+    
+    
+    <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+    <bean id="startReleaseQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="doReleaseTime"/>
+                <ref bean="backupMySQLTime"/>
+            </list>
+        </property>
+    </bean>
+</beans>

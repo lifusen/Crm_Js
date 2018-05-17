@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+    
+  <description>获取当前时间距上次跟进时间天数</description>
+  <display-name>fllowDate Functions</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>fllowDate</short-name>
+  <uri>http://itproject.cn/fllowDate</uri>
+
+  <function>
+    <description>获取当前时间距上次跟进时间天数</description>
+    <name>fllowDate</name>
+    <function-class>cn.itproject.crm.util.HandleFllowDateFunction</function-class>
+    <function-signature>String fllowDate(java.util.Date)</function-signature>
+  </function>
+</taglib>

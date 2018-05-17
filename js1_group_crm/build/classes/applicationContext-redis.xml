@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:redis="http://www.springframework.org/schema/redis"
+	xsi:schemaLocation="
+	     http://www.springframework.org/schema/beans
+	     http://www.springframework.org/schema/beans/spring-beans.xsd
+	     http://www.springframework.org/schema/cache
+     	 http://www.springframework.org/schema/cache/spring-cache.xsd
+     	 http://www.springframework.org/schema/redis
+         http://www.springframework.org/schema/redis/spring-redis-1.0.xsd">
+
+	<!-- 自定义的缓存key生成器 -->
+	<bean id="customKeyGenerator" class="cn.itproject.crm.cache.CustomKeyGenerator" />
+	
+	<!-- 配置缓存注解驱动并指定key的生成策略 -->
+	<cache:annotation-driven cache-manager="cacheManager"
+		key-generator="customKeyGenerator"/>
+
+	<!-- redis 连接工厂 -->
+	<bean id="jedisConnectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="${redis.host}" />
+		<property name="port" value="${redis.port}" />
+		<property name="password" value="${redis.password}" />
+	</bean>
+
+	<!-- 字符串序列化器 -->
+	<bean id="stringRedisSerializer"
+		class="cn.itproject.crm.cache.CustomStringRedisSerializer" />
+	
+	<!-- redis模板 -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="jedisConnectionFactory" />
+		<property name="keySerializer" ref="stringRedisSerializer" />
+		<property name="hashKeySerializer" ref="stringRedisSerializer"/>
+	</bean>
+	
+	<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+		<constructor-arg name="redisOperations" ref="redisTemplate" />
+		<property name="expires">
+			<map>
+				<!-- CRUD 缓存,增删改会删除缓存 -->
+				<entry key="defaultCache" value="300" />
+				<entry key="customerDetailCache" value="300" />
+				<!-- 消息公告缓存,缓存5分钟 -->
+				<entry key="messageCache" value="300" />
+				<!-- 公司缓存,缓存5分钟 -->
+				<entry key="companyCache" value="300" />
+				<!-- 部门缓存,缓存5分钟 -->
+				<entry key="departmentCache" value="300" />
+				<!-- 员工缓存,缓存5分钟 -->
+				<entry key="employeeCache" value="300" />
+				<!-- 客户来源缓存,缓存5分钟 -->
+				<entry key="customerSourceCache" value="300" />
+				<!-- 系统参数配置缓存,缓存5分钟 -->
+				<entry key="systemConfigCache" value="300" />
+				
+				<!-- 查询缓存,增删改不会删除缓存 -->
+				<entry key="redisCache-2m" value="120"/>
+				<entry key="redisCache-3m" value="180"/>
+				<entry key="redisCache-5m" value="300"/>
+				<entry key="redisCache-10m" value="600"/>
+				<entry key="redisCache-20m" value="1200"/>
+				<entry key="redisCache-30m" value="1800"/>
+			</map>
+		</property>
+	</bean>
+</beans>

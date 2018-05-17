@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 每日基础工作数据汇总 -->
+	<sql-query name="getDailyBasicData">
+		<![CDATA[
+			select
+					#{rid} as rid,
+					count(1) as count
+			from
+					customer c     
+			inner join
+					(
+							select
+									max(id) as fId,
+									f.customerId as cId               
+							from
+									customerfollow f                       
+							where
+									f.type is not null                      
+							group by
+									f.customerId                
+					) temp                    
+							on c.id = temp.cId             
+			inner join
+					customerfollow cf                     
+							on cf.id = temp.fId             
+			inner join
+					employee e                     
+							on c.employeeId = e.id             
+			left join
+					department d                     
+							on c.departmentId = d.id             
+			where
+					cf.remindTime is not null      
+					and c.state in (:states)  
+					and #{idWhere}  
+					#{today}
+			group by #{rid}
+		]]>
+	</sql-query>	
+</hibernate-mapping>

@@ -1,0 +1,174 @@
+body{
+	font-size:12px;
+}
+.page-title{
+	margin:8px 0px;
+}
+.page-content-body ul.breadcrumb{
+	margin-bottom:10px;
+}
+.customerFormContainer{
+	min-width:990px;
+}
+.customerFormContainer .page-content .breadcrumb{
+	margin-bottom:10px;
+}
+.customerFormContainer label, input, button, select, textarea{
+	font-size:12px;
+	font-family: 宋体;
+	margin-left: 20px;
+}
+.customerFormContainer label.m-wrap, 
+.customerFormContainer input.m-wrap, 
+.customerFormContainer button.m-wrap, 
+.customerFormContainer select.m-wrap, 
+.customerFormContainer textarea.m-wrap{
+	font-size:12px;
+}
+.customerFormContainer select, 
+.customerFormContainer textarea, 
+.customerFormContainer input[type="text"], 
+.customerFormContainer input[type="password"], 
+.customerFormContainer input[type="datetime"], 
+.customerFormContainer input[type="datetime-local"], 
+.customerFormContainer input[type="date"], 
+.customerFormContainer input[type="month"], 
+.customerFormContainer input[type="time"], 
+.customerFormContainer input[type="week"], 
+.customerFormContainer input[type="number"], 
+.customerFormContainer input[type="email"], 
+.customerFormContainer input[type="url"], 
+.customerFormContainer input[type="search"], 
+.customerFormContainer input[type="tel"], 
+.customerFormContainer input[type="color"], 
+.customerFormContainer .uneditable-input{
+	font-size:12px;
+	font-family: 宋体;
+	color:#000;
+}
+.customerFormContainer .row-fluid [class*="span"]{
+	min-height:26px;
+}
+.customerFormContainer .form-horizontal .control-label{
+	padding-top:0px;
+}
+.customerFormContainer select.m-wrap, 
+.customerFormContainer input[type="file"].m-wrap{
+	height:28px !important;
+	line-height: 28px;
+	font-family: 宋体;
+	font-size: 13px;
+}
+.customerFormContainer .controls > .radio, 
+.customerFormContainer .controls > .checkbox{
+	margin-top:2px !important;
+}
+
+.popover{
+	max-width: 700px;
+}
+
+.customerFormContainer input,
+.customerFormContainer select,
+.customerFormContainer textarea{
+	border:1px solid #666;
+}
+
+.customerFormContainer .control-label{
+	margin-top:0px;
+	vertical-align: middle;
+	padding-bottom:4px;
+	color:#666;
+}
+
+.customerFormContainer .portlet-title .caption{
+	margin-bottom:0px;
+	font-size:14px;
+}
+.customerFormContainer .portlet.box .portlet-title{
+	padding:0px;
+	padding-top:2px;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.customerFormContainer .portlet.box .portlet-title .tools{
+	margin:0px;
+}
+
+#customerBasicInfoArea{
+	min-width:1070px;
+}
+
+/*form table*/
+.formTable{
+	margin-bottom:2px;
+}
+.formTable .control-label{
+	margin-top:0px;
+	vertical-align: middle;
+	padding-bottom:4px;
+	color:#555;
+}
+.formTable tr{
+	height:26px;
+}
+.formTable th{
+	font-weight: normal;
+}
+.formTable td{
+	height:26px;
+	padding:2px;
+	width:80px;
+}
+.formTable td .input{
+	padding:0px;
+	height:24px;
+	line-height:15px;
+	width:90px;
+}
+
+.formTable td .width120{
+	width:120px;
+}
+
+#signCustomerArea .formTable td label.control-label,#loanCustomerArea .formTable td label.control-label{
+	width:50px;
+}
+
+
+#signCustomerArea .formTable td .input{
+	width:120px;
+	padding:0px 2px;
+}
+
+#customerAssetArea hr{
+	margin:0px;
+}
+
+select.xsmall{
+	width:40px !important;
+	height:25px;
+	line-height:25px;
+}
+
+.height30{
+	height:30px;
+}
+.height36{
+	height:36px;
+}
+.height40{
+	height:40px;
+}
+.height45{
+	height:45px;
+}
+.error{
+	color: red;
+}
+
+/** 分页按钮鼠标手型样式 **/
+.pagination ul>li{
+	cursor:pointer
+}

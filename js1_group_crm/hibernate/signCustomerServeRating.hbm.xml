@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 签单客户维护列表:显示所有未评级的签单客户信息 -->
+	<sql-query name="signCustomerServeRatingList">
+		<![CDATA[
+			select 
+				d.name as dname,
+				e.name as ename,
+				c.name as cname,
+				c.phone,
+				s.id as sId,
+				s.loanAmount,
+				s.signTime,
+				c.companyId
+			from signcustomer s
+			inner join customer c
+				on s.customerId = c.id
+			inner join employee e
+				on c.employeeId = e.id
+			left join department d
+				on c.departmentId = d.id
+			where s.serveRating is null
+		]]>
+	</sql-query>
+	
+	<!-- 签单客户维护列表:总行数 -->
+	<sql-query name="signCustomerServeRatingListCount">
+		<![CDATA[
+			select count(*) from (
+				select 
+					s.id
+				from signcustomer s
+				inner join customer c
+					on s.customerId = c.id
+				inner join employee e
+					on c.employeeId = e.id
+				left join department d
+					on c.departmentId = d.id
+				where s.serveRating is null #{whereKey} #{companyId}
+			) temp
+		]]>
+	</sql-query>
+	
+</hibernate-mapping>

@@ -1,0 +1,17 @@
+select.xsmall{
+	width:40px !important;
+	height:25px;
+	line-height:25px;
+}
+
+div.chzn-container.chzn-container-single{
+	width:114px;
+}
+
+div.signCustomerBtnGroup{
+}
+
+div.signCustomerBtnGroup .btn{
+	margin-right:6px;
+	margin-bottom:10px;
+}

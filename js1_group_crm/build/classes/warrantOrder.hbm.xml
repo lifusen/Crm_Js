@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 有效客户列表 -->
+	<!-- 				AND s.warrantDepartmentId IS NULL AND s.warrantEmployeeId IS NULL -->
+	<!-- 所有权证部门 ‘中心新订单、部门新订单、有效客户’ 都应限制为‘签单客户’排除 公共池、无效客户等：and c.state=4 -->
+	<sql-query name="centerOrderList">
+		<![CDATA[
+			SELECT
+				c.id as cId,
+				s.id as sId,
+				c.companyId,
+				c.departmentId,
+				c.`name` as customerName,
+				e.`name` as employeeName,
+				c.phone,
+				c.customerAssetTitile,
+				c.customerAsset,
+				s.loanType,
+				s.updateTime,
+				s.warrantCompanyId 
+			FROM
+				signcustomer s,
+				customer c,
+				employee e
+			WHERE
+				s.customerId = c.id AND e.id=c.employeeId AND (s.listType not in(2,3) or s.listType is null) 
+				AND c.state=4 AND s.outLoanCondition!='已放款'
+		]]>
+	</sql-query>
+	
+<!-- 	AND s.warrantDepartmentId IS NULL  AND s.warrantEmployeeId IS NULL -->
+	<sql-query name="centerOrderCount">
+		<![CDATA[
+			SELECT
+				count(c.id)
+			FROM
+				signcustomer s,
+				customer c
+			WHERE
+				s.customerId = c.id AND (s.listType not in(2,3) or s.listType is null) 
+				AND c.state=4 AND s.outLoanCondition!='已放款'
+		]]>
+	</sql-query>
+	
+<!-- 	AND s.warrantDepartmentId IS NOT NULL AND s.warrantEmployeeId IS NULL -->
+	<sql-query name="warrantDepartmentOrderList">
+		<![CDATA[
+			SELECT
+				c.id as cId,
+				s.id as sId,
+				c.companyId,
+				c.departmentId,
+				c.`name` as customerName,
+				e.`name` as employeeName,
+				c.phone,
+				c.customerAssetTitile,
+				c.customerAsset,
+				s.loanType,
+				s.updateTime,
+				s.warrantCompanyId,
+				s.warrantDepartmentId
+			FROM
+				signcustomer s,
+				customer c,
+				employee e
+			WHERE
+				s.customerId = c.id AND e.id=c.employeeId AND s.listType=2 AND c.state in (4,5,6)
+		]]>
+	</sql-query>
+<!-- 	 s.warrantDepartmentId IS NOT NULL  -->
+<!-- 				AND s.warrantEmployeeId IS NULL -->
+	<sql-query name="warrantDepartmentOrderCount">
+		<![CDATA[
+			SELECT
+				count(c.id)
+			FROM
+				signcustomer s,
+				customer c
+			WHERE
+				s.customerId = c.id  AND s.listType=2 AND c.state in (4,5,6)
+		]]>
+	</sql-query>
+<!-- 	 s.warrantEmployeeId IS NOT NULL -->
+	<sql-query name="warranterOrderList">
+		<![CDATA[
+			SELECT
+				c.id as cId,
+				s.id as sId,
+				c.companyId,
+				s.warrantCompanyId as x,
+			  	s.warrantDepartmentId as y,
+			  	s.warrantEmployeeId as z,
+				c.departmentId,
+				c.`name` as customerName,
+				e.`name` as employeeName,
+				c.phone,
+				c.customerAssetTitile,
+				c.customerAsset,
+				s.loanType,
+				s.updateTime,
+				s.contractNO,
+				s.orderType,
+				cs.sourceName,
+				o.createTime,
+				o.warranterId as warrantEmployeeId,
+				o.departmentId as warrantDepartmentId,
+				o.companyId as warrantCompanyId,
+				o.outLoanState
+			FROM
+				signcustomer s,
+				customer c,
+				employee e,
+				customersource cs,
+				outloanbelong o
+			WHERE
+				s.customerId = c.id AND e.id=c.employeeId AND c.customerSourceId=cs.id AND c.state in (4,5,6) 
+				AND s.id = o.signCustomerId AND o.outLoanState=0
+		]]>
+	</sql-query>
+<!-- 	 s.warrantEmployeeId IS NOT NULL -->
+	<sql-query name="warranterOrderCount">
+		<![CDATA[
+			SELECT
+				count(c.id)
+			FROM
+				signcustomer s,
+				customer c,
+				outloanbelong o
+			WHERE
+				s.customerId = c.id AND c.state in (4,5,6) AND s.id = o.signCustomerId  AND o.outLoanState=0
+		]]>
+	</sql-query>
+</hibernate-mapping>

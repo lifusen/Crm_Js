@@ -1,0 +1,93 @@
+
+		div.desktopContainer{
+			padding:10px;
+		}
+		div.desktopContainer table,
+		div.desktopContainer div.pull-right,
+		div.desktopContainer .tabbable, 
+		#dailyBasicDataArea table th,
+		#dailyBasicDataArea table td,
+		div.desktopContainer .portlet-body{font-family:'微软雅黑'; font-size: 14px; }
+		
+		.b-n { border: none;}
+				
+		.b-rb-g9 { border-right: 1px solid #999999; border-bottom: 1px solid #999999; }
+		.b-r-g9 { border-right: 1px solid #999999; }
+		.b-b-g9 { border-bottom: 1px solid #999999; }
+		.b-t-g9 { border-top: 1px solid #999999; }
+		
+		.b-lb-w { border-left: 1px solid #FFFFFF; border-bottom: 1px solid #FFFFFF; }
+		.b-r-w { border-right: 1px solid #FFFFFF; }
+		.b-l-w { border-left: 1px solid #FFFFFF; }
+			
+		.m-t-10 { margin-top: 10px;}
+		.m-b-10 { margin-bottom: 10px;}		
+		.m-tb-20 { margin-top: 20px; margin-bottom: 20px; }		
+		
+		.p-t-10 { padding-top: 10px;}
+		.p-b-10 { padding-bottom: 10px;}
+		.p-l-10 { padding-left: 10px;}
+		.p-r-10 { padding-right: 10px; }
+		
+		.p-t-20 { padding-top: 20px;}
+		.p-b-20 { padding-bottom: 20px;}
+		.p-l-20 { padding-left: 20px;}
+		.p-r-20 { padding-right: 20px; }	
+		.p-tb-20 { padding-top: 20px; padding-bottom: 20px;}			
+		
+		.fl { float: left; }
+		.fr { float: right; }
+		.cf { clear: both; }
+		
+		.f-s { font-family: "微软雅黑"; }
+		
+		.b { font-weight: bold; }
+		.l { font-weight: lighter; }
+		
+		.t-12 { font-size: 12px;}		
+		.t-14 { font-size: 14px;}		
+		.t-20 { font-size: 20px;}
+		.t-28 { font-size: 28px;}
+		.t-36 { font-size: 36px;}
+		.t-40 { font-size: 40px;}
+		.t-60 { font-size: 60px;}
+		.t-80 { font-size: 80px;}
+		
+		.t-w { color: #FFFFFF; } 
+		.t-g { color: #333; } 
+		.t-r { color: #e02222; }  
+		.t-b { color: #4b8df8;} 
+		.t-lb { color: #019FC2; } 
+		.t-y { color: #FFFF00; } 
+		.t-o { color:#DA521E; } 
+		
+		.bg-g { background-color: #A8B2B4; } 
+		.bg-lg { background-color: #E4E9EF; } 
+		.bg-w { background-color: #FFFFFF; } 
+		.bg-r { background-color: red; } 
+		.bg-b { background-color: #4b8df8; } 
+		.bg-lb { background-color: #019FC2; } 
+		.bg-o { background-color:#DA521E; } 
+		
+		.small-font-container * { font-size: 12px; }
+		
+		
+		/***************ywy_desktop_page.html******************/
+		.tip { font-family: "微软雅黑"; font-size: 12px; font-weight: lighter; background-color: red; color: white; width: 16px; height: 16px; display:inline-block; text-align:center; position: relative; top: -10px; left: 0px; }
+		.no-border-table1 {  width: 100%; margin-left: 30px;}
+		.no-border-table1 td { padding: 3px; text-align:center; }		
+		.white-label { background-color: white; color: #4b8df8; font-weight: bold; padding: 1px 5px;}		
+		.blue-label { background-color: #4b8df8; color: #FFFFFF; border: 1px solid #FFFFFF; font-weight: bold; padding: 0 4px;}
+		
+		/***************ywy_plan_page.html******************/
+		.no-border-table2 td { text-align:center; }
+		.red-label { background-color: red; color: #FFFF00; font-weight: bold; padding: 0 5px; }
+		
+		/***************mbjl_desktop_page.html******************/
+		.no-border-table3 td { text-align:center; padding-top: 5px; padding-bottom: 5px;}
+		.c-p { cursor: pointer; }
+		#smqdhz-day { display:none; }
+		#sfhz-month { display:none; }
+		#skhz-day { display:none; }
+		
+		

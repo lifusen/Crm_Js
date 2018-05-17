@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 查询业务部部门报表 -->
+	<sql-query name="queryYwbDeptReport">
+		<![CDATA[
+			select 
+				d.id as rid,
+				d.`name` as rname,
+				cf.type as type,
+				count(cf.type) as count,
+				cf.edtdate as edtDate 
+			from customerfollow cf
+			inner join employee e
+				on e.id=cf.employeeId
+			inner join department d
+				on e.departmentId=d.id
+			WHERE cf.type is not null
+				and d.id IN(:ids) 
+				and cf.edtdate >= :startDate and cf.edtdate <= :endDate
+			GROUP BY cf.type,d.id,cf.edtdate
+		]]>
+	</sql-query>	
+
+	<!-- 查询业务部员工报表 -->
+	<sql-query name="queryYwbEmpReport">
+		<![CDATA[
+			select 
+				e.id as rid,
+				e.name as rname,
+				cf.type as type,
+				count(cf.type) as count,
+				cf.edtdate as edtDate 
+			from customerfollow cf
+			inner join employee e
+				on e.id=cf.employeeId
+			inner join department d
+				on e.departmentId=d.id
+			WHERE cf.type is not null
+				and e.id in(:ids) 
+				and cf.edtdate >= :startDate and cf.edtdate <= :endDate
+			GROUP BY cf.type,e.id,cf.edtdate
+		]]>
+	</sql-query>	
+	
+	
+	
+
+	<!-- 根据员工ID获取客户工作提醒列表 -->
+	<sql-query name="queryReport">
+		<![CDATA[
+		SELECT 
+			d.id as rid,
+			d.`name` as rname,
+			cf.type as type,
+			count(cf.type) as count,
+			cf.edtdate as edtDate 
+		FROM customerfollow cf,
+			employee em,department d
+		WHERE 
+			cf.type is not null 
+			and em.id=cf.employeeId and em.departmentId=d.id
+			and d.id IN(SELECT id FROM department WHERE `name` LIKE "%业务%") 
+			and cf.edtdate >= :edtDateBegin and cf.edtdate <= :edtDateEnd 
+		GROUP BY cf.type,d.id,cf.edtdate
+		]]>
+	</sql-query>
+	<!-- 统计客户列表 -->
+	<sql-query name="queryReportCustomerList">
+		<![CDATA[
+		select 
+			c.id as customerId,
+			cf.id,
+			d.id as did,
+			d.`name` as dname,
+			e.`name` as ename,
+			c.`name` as cname,
+			c.phone,
+			c.loanType,
+			c.customerLevel,
+			cf.remindTime,
+			cf.remindContent,
+			cf.edtDate, 
+			cf.edtTime, 
+			cf.feedbackContent,
+			cf.type as type
+		from customerfollow cf
+		INNER JOIN customer c on c.id= cf.customerId 
+		inner join employee e
+			on e.id=cf.employeeId
+		inner join department d
+			on e.departmentId=d.id
+		WHERE cf.type is not null
+			and cf.type=:type  
+			and cf.edtdate = :date ${where}
+		]]>
+	</sql-query>
+	<sql-query name="queryReportCustomerCount">
+		<![CDATA[
+		select 
+			count(cf.id)
+		from customerfollow cf
+		INNER JOIN customer c on c.id= cf.customerId 
+		inner join employee e
+			on e.id=cf.employeeId
+		inner join department d
+			on e.departmentId=d.id
+		WHERE cf.type is not null
+			and cf.type=:type  
+			and cf.edtdate = :date ${where}
+		]]>
+	</sql-query>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+.customerFormContainer select.m-wrap.small{
+	width: 115px !important;
+}
+
+.customerFormContainer .controls > .radio{
+	margin-right:0px !important;
+}
+
+.customerFormContainer .form-horizontal .control-group{
+	margin-bottom:8px;
+}
+
+.customerFormContainer select{
+	padding:2px 0px;
+	 
+}
+
+.customerFormContainer form{
+	margin:0px;
+}
+
+.customerFormContainer .btn{
+	padding:5px 14px;
+}
+
+.customerFormContainer .portlet{
+	margin-bottom:6px;
+}
+
+#signCustomerArea select.m-wrap.small{
+	width: 126px !important;
+}

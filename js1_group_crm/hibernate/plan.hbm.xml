@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<sql-query name="getPlanOfDept">
+		<![CDATA[
+			select 
+				p.departmentId as id,
+				sum(p.visit) visit,
+				sum(p.sign) sign,
+				sum(p.performance) performance
+			from plan p
+			where type = 0 
+			#{currentMonth}
+			group by p.departmentId
+		]]>
+	</sql-query>
+	
+	<sql-query name="getPlanOfEmp">
+		<![CDATA[
+			select 
+				p.employeeId as id,
+				sum(p.visit) visit,
+				sum(p.sign) sign,
+				sum(p.performance) performance
+			from plan p
+			where type = 1
+				and departmentId = :departmentId
+				#{employee}
+			#{currentMonth}
+			group by p.employeeId
+		]]>
+	</sql-query>
+</hibernate-mapping>

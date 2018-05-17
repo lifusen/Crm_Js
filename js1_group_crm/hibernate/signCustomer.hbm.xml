@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<!-- 根据员工ID获取其签单客户列表 -->
+	<sql-query name="getSignCustomerList">
+		<![CDATA[
+			select 
+				c.id as customerId,
+				c.name as customerName,
+				c.phone,
+				c.state,
+				s.loanType,
+				c.callCount,
+				c.visitCount,
+				c.dataPercent,
+				c.attentionLevel,
+				c.visibility,
+				e.id as employeeId,
+				e.name as employeeName,
+				d.id as departmentId,
+				d.name as departmentName,
+				s.id as signCustomerId,
+				s.contractNo,
+				s.customerStatus as signCustomerStatus,
+				c.companyId,
+				cs.sourceName
+			from customer c
+			inner join (
+				select max(s.id) as sId,s.customerId as cId from signcustomer s
+				group by s.customerId
+			) temp
+			on c.id = temp.cId
+			inner join signcustomer s
+			on s.id = temp.sId
+			inner join employee e
+			on c.employeeId = e.id
+			left join department d
+			on c.departmentId = d.id
+			left join CustomerSource cs 
+			on c.customerSourceId = cs.id
+			where s.customerStatus = 0 and s.outLoanCondition != '已放款' and c.state in (:states) #{where} #{whereKey} #{dateScope}
+		]]>
+	</sql-query>
+	
+	<!-- 根据员工ID获取其签单客户列表的数量 -->
+	<sql-query name="getSignCustomerListCount">
+		<![CDATA[
+			select count(*) from (
+				select 
+					c.id
+				from customer c
+				inner join (
+					select max(s.id) as sId,s.customerId as cId from signcustomer s
+					group by s.customerId
+				) temp
+				on c.id = temp.cId
+				inner join signcustomer s
+				on s.id = temp.sId
+				where s.customerStatus = 0 and s.outLoanCondition != '已放款' and c.state in (:states) #{where} #{whereKey} #{dateScope} #{companyId}
+			) a
+		]]>
+	</sql-query>
+	
+</hibernate-mapping>

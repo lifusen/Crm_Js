@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+.customerListArea{
+	border:0px solid red;
+	/**width:100%;**/
+	/**overflow: scroll;**/
+	font-size:12px;
+	font-family: 宋体;
+}
+.customerListArea .table thead tr{
+	background: #EEE;
+}
+.customerListArea .table thead tr th{
+	text-align:center;
+}
+.customerListArea .table thead tr th,.customerListArea .table tbody tr td{
+	font-size:12px;
+	font-weight: normal;
+	padding:3px;
+	height:28px;
+	line-height:28px;
+}
+.customerListArea .table td{
+}
+
+.customerListArea .table thead tr td a{
+}
